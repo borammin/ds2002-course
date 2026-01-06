@@ -1,0 +1,1939 @@
+# Practice: Linux Command Line Interface (CLI) and Filesystem
+
+# Reference
+
+## Learn about your environment
+
+### hostname
+
+**Use case:** Display the hostname (network name) of the system. Useful for identifying which machine you're working on, especially in remote or cloud environments.
+
+**Command:**
+```bash
+hostname
+```
+
+**Example output:**
+```bash
+codespaces-57da94
+```
+
+**Explanation:** The output shows the unique hostname assigned to your codespace. In this case, `codespaces-57da94` indicates this is a GitHub Codespaces instance with identifier `57da94`. Each codespace gets a unique hostname.
+
+### uptime
+
+**Use case:** Shows how long the system has been running, along with the current time, number of users, and system load averages. Useful for monitoring system health and uptime.
+
+**Command:**
+```bash
+uptime
+```
+
+**Example output:**
+```bash
+ 14:30:45 up 2 days,  3:15,  1 user,  load average: 0.05, 0.10, 0.15
+```
+
+**Explanation:** 
+- `14:30:45` - Current time
+- `up 2 days, 3:15` - System has been running for 2 days and 3 hours 15 minutes
+- `1 user` - Number of users currently logged in
+- `load average: 0.05, 0.10, 0.15` - Average system load over 1, 5, and 15 minutes. Lower values indicate less system activity.
+
+### date
+
+**Use case:** Display or set the system date and time. Useful for checking the current time, scheduling tasks, or timestamping operations.
+
+**Command:**
+```bash
+date
+```
+
+**Example output:**
+```bash
+Mon Jan 15 14:30:45 UTC 2024
+```
+
+**Explanation:** Shows the current date and time in the format: day of week, month, day, time (24-hour format), timezone, and year. UTC (Coordinated Universal Time) is the standard timezone used in many cloud environments.
+
+### cal
+
+**Use case:** Display a calendar for the current month or a specified month/year. Quick way to check dates without leaving the terminal.
+
+**Command:**
+```bash
+cal
+```
+
+**Example output:**
+```bash
+    January 2024
+Su Mo Tu We Th Fr Sa
+    1  2  3  4  5  6
+ 7  8  9 10 11 12 13
+14 15 16 17 18 19 20
+21 22 23 24 25 26 27
+28 29 30 31
+```
+
+**Explanation:** Displays a calendar grid for the current month. The current day is highlighted (if your terminal supports it). You can also specify a month and year: `cal 12 2024` for December 2024.
+
+### cat /etc/os-release
+
+**Use case:** Display operating system identification information. Essential for understanding what Linux distribution and version you're working with.
+
+**Command:**
+```bash
+cat /etc/os-release
+```
+
+**Example output:**
+```bash
+NAME="Alpine Linux"
+ID=alpine
+VERSION_ID=3.22.2
+PRETTY_NAME="Alpine Linux v3.22"
+HOME_URL="https://alpinelinux.org/"
+BUG_REPORT_URL="https://gitlab.alpinelinux.org/alpine/aports/-/issues"
+```
+
+**Explanation:**
+- `NAME` - Full name of the operating system
+- `ID` - Short identifier for the distribution
+- `VERSION_ID` - Specific version number
+- `PRETTY_NAME` - Human-readable name and version
+- `HOME_URL` - Official website for the distribution
+- `BUG_REPORT_URL` - Where to report issues
+
+This information helps you understand the system environment and find appropriate documentation or packages.
+
+## Navigating the file system
+
+### Where am I? pwd (Print Working Directory)
+
+**Use case:** Display the full path of the current working directory. Essential for knowing where you are in the filesystem hierarchy.
+
+**Command:**
+```bash
+pwd
+```
+
+**Example output:**
+```bash
+/home/codespace
+```
+
+**Explanation:** Shows the absolute path to your current directory. In this example, you're in the `/home/codespace` directory, which is typically the home directory in a codespace environment.
+
+
+### ls (List)
+
+**Use case:** Display the contents of a directory. One of the most frequently used commands for exploring the filesystem.
+
+**Basic listing:**
+```bash
+ls
+```
+
+**Example output:**
+```bash
+README.md  practice  labs  notebooks
+```
+
+**Explanation:** Shows only visible (non-hidden) files and directories in a simple list format, sorted alphabetically.
+
+### ls -l (Long listing)
+
+**Use case:** Display detailed information about files and directories including permissions, ownership, size, and modification date.
+
+**Command:**
+```bash
+ls -l
+```
+
+**Example output:**
+```bash
+-rw-r--r-- 1 codespace codespace  1234 Jan 15 14:30 README.md
+drwxr-xr-x 3 codespace codespace  4096 Jan 15 10:15 practice
+drwxr-xr-x 2 codespace codespace  4096 Jan 15 09:00 labs
+```
+
+**Explanation:**
+- First column (`-rw-r--r--`): File permissions and type
+  - `-` = regular file, `d` = directory
+  - `rw-` = owner can read/write
+  - `r--` = group can read
+  - `r--` = others can read
+- Second column (`1`): Number of hard links
+- Third column (`codespace`): Owner username
+- Fourth column (`codespace`): Group name
+- Fifth column (`1234`): File size in bytes
+- Date/time: Last modification date and time
+- Last column: File or directory name
+
+### ls -la (List all, including hidden)
+
+**Use case:** Display all files including hidden ones (those starting with a dot) with detailed information.
+
+**Command:**
+```bash
+ls -la
+```
+
+**Example output:**
+```bash
+drwxr-xr-x 5 codespace codespace  4096 Jan 15 14:30 .
+drwxr-xr-x 3 codespace codespace  4096 Jan 15 10:00 ..
+-rw-r--r-- 1 codespace codespace   220 Jan 15 09:00 .bashrc
+-rw-r--r-- 1 codespace codespace  1234 Jan 15 14:30 README.md
+drwxr-xr-x 3 codespace codespace  4096 Jan 15 10:15 practice
+```
+
+**Explanation:** 
+- `.` represents the current directory
+- `..` represents the parent directory
+- `.bashrc` is a hidden file. Hidden files start with `.` - these are typically configuration files
+- The `-a` flag shows all files, including hidden ones that `ls` normally hides
+
+**Compare output of `ls` and `ls -a`:** The main difference is that `ls -a` reveals hidden files (like `.bashrc`, `.gitignore`) that `ls` alone would not show.
+
+### cd (Change Directory)
+
+**Use case:** Change your current working directory. Fundamental command for navigating the filesystem.
+
+**Go to your home directory - three equivalent options:**
+
+1. **Using `cd` alone:**
+   ```bash
+   cd
+   ```
+   **Explanation:** With no arguments, `cd` takes you to your home directory (stored in the `$HOME` [environment variable](https://en.wikipedia.org/wiki/Environment_variable)).
+
+2. **Using the HOME variable:**
+   ```bash
+   cd $HOME
+   ```
+   **Explanation:** `$HOME` is an [environment variable](https://en.wikipedia.org/wiki/Environment_variable) containing your home directory path. The `$` tells the shell to expand the variable.
+
+3. **Using tilde notation:**
+   ```bash
+   cd ~/
+   ```
+   **Explanation:** The `~` is a shortcut that expands to your home directory path. The trailing `/` is optional.
+
+**All three commands produce the same result** - they navigate to your home directory. The choice is a matter of preference and context.
+
+**Going back to last directory:**
+
+```bash
+cd -
+```
+
+**Explanation:** The `-` is a special argument that takes you back to the previous directory you were in. Useful for quickly switching between two directories.
+
+**Changing directly to directory (absolute path):**
+
+Remember, a path designates a file or directory, separating subdirectories (sub-folders) with the `/` character.
+
+```bash
+cd /workspaces/ds2002-course/practice/01-env
+```
+
+**Explanation:** An absolute path starts with `/` and specifies the complete path from the root of the filesystem. This works from any location.
+
+What happens if the path you entered does not exist? Let's find out.
+```bash
+cd bogus/path/
+```
+
+**Output**
+You should set the following response:
+```bash
+cd: no such file or directory: /bogus/path/
+```
+
+**Changing directory using a relative path:**
+
+```bash
+cd practice/01-env
+```
+
+**Explanation:** A relative path doesn't start with `/` and is ***relative to your current directory***. If you're in `/workspaces/ds2002-course`, then `practice/01-env` refers to `/workspaces/ds2002-course/practice/01-env`.
+
+You can use `..` to go up a directory, or even multiple directories. Let's assume you're in `/workspaces/ds2002-course/practice/01-env/`. (Run `pwd` to confirm)
+
+Then execute this command:
+```bash
+cd ../../labs
+```
+
+The `cd` command took you two levels up to `/workspaces/ds2002-course/` and then one directory down into `labs`. You can run the `pwd` command to confirm the full path of the directory you're in now. 
+
+Keep experimenting with this so you get comfortable with the concept of relative and absolute paths.    
+
+Remember, if you ever get lost use the `pwd` command to print the current working directory your in. And you can execute `cd` without any arguments to go back to your home directory.
+
+## Creating new directories and files
+
+### mkdir (Make Directory)
+
+**Use case:** Create new directories (folders). Essential for organizing your files and projects.
+
+**Create a single directory:**
+```bash
+mkdir myproject
+```
+
+**Example:** After running this command, you can verify with `ls`:
+```bash
+$ ls
+myproject  README.md  practice
+```
+
+**Explanation:** Creates a new directory named `myproject` in the current location. The directory will be empty initially.
+
+**Create multiple directories at once:**
+```bash
+mkdir dir1 dir2 dir3
+```
+
+**Create nested directories (parent and child):**
+```bash
+mkdir -p projects/2024/january
+```
+
+**Explanation:** The `-p` flag creates parent directories as needed. If `projects` and `2024` don't exist, they will be created automatically. Without `-p`, the command would fail if parent directories don't exist.
+
+**Example output:**
+```bash
+$ mkdir -p projects/2024/january
+$ ls -R projects
+projects:
+2024
+
+projects/2024:
+january
+
+projects/2024/january:
+```
+
+### touch (Create Empty File or Update Timestamp)
+
+**Use case:** Create new empty files or update the access/modification timestamp of existing files. Commonly used to create placeholder files or trigger file-based operations.
+
+**Create a single empty file:**
+```bash
+touch newfile.txt
+```
+
+**Example output:**
+```bash
+$ touch newfile.txt
+$ ls -l newfile.txt
+-rw-r--r-- 1 codespace codespace 0 Jan 15 15:30 newfile.txt
+```
+
+**Explanation:** Creates a new empty file (0 bytes) named `newfile.txt`. If the file already exists, `touch` updates its modification timestamp without changing the file contents.
+
+**Create multiple files at once:**
+```bash
+touch script.sh data.csv notes.md
+```
+
+**Update timestamp of existing file:**
+```bash
+touch existingfile.txt
+```
+
+**Explanation:** If the file already exists, `touch` updates its access and modification times to the current time *without* modifying the file contents. Useful for triggering file-based operations or resetting timestamps.
+
+### mv (Move/Rename)
+
+**Use case:** Move files or directories to a new location, or rename them. The `mv` command can both move and rename files/directories.
+
+**Rename a file:**
+```bash
+mv oldname.txt newname.txt
+```
+
+**Example:** Before:
+```bash
+$ ls
+oldname.txt  README.md
+```
+
+After running `mv oldname.txt newname.txt`:
+```bash
+$ ls
+newname.txt  README.md
+```
+
+**Explanation:** When the destination doesn't exist, `mv` renames the file. The file content remains unchanged, only the name changes.
+
+**Move a file to a directory:**
+```bash
+mv file.txt documents/
+```
+
+**Example:** Before:
+```bash
+$ ls
+file.txt  documents/  README.md
+```
+
+After running `mv file.txt documents/`:
+```bash
+$ ls
+documents/  README.md
+$ ls documents/
+file.txt
+```
+
+**Explanation:** When the destination is an existing directory, `mv` moves the file into that directory. The file is no longer in the original location.
+
+**Move and rename at the same time:**
+```bash
+mv file.txt documents/renamed.txt
+```
+
+**Explanation:** You can move a file to a new location and give it a new name in one command.
+
+**Move multiple files:**
+```bash
+mv file1.txt file2.txt file3.txt documents/
+```
+
+**Explanation:** You can move multiple files to a directory. The last argument must be the destination directory.
+
+**Move a directory:**
+```bash
+mv olddir newdir
+```
+
+**Explanation:** Works the same way for directories. You can rename or move entire directories.
+
+**Important notes:**
+- `mv` overwrites existing files without warning (unless using `-i` for interactive mode)
+- Use `mv -i` to prompt before overwriting
+- `mv` preserves file permissions and timestamps when possible
+- Moving files within the same filesystem is instant (just updates directory entries)
+
+### rm (Remove/Delete)
+
+**Use case:** Delete files or directories. **Warning:** Deleted files cannot be easily recovered, so use with caution.
+
+**Delete a single file:**
+```bash
+rm file.txt
+```
+
+**Example:** Before:
+```bash
+$ ls
+file.txt  README.md
+```
+
+After running `rm file.txt`:
+```bash
+$ ls
+README.md
+```
+
+**Explanation:** Permanently deletes the file. The file is removed from the filesystem and cannot be recovered through normal means.
+
+**Delete multiple files:**
+```bash
+rm file1.txt file2.txt file3.txt
+```
+
+**Delete files matching a pattern:**
+```bash
+rm *.txt
+```
+
+**Example output:**
+```bash
+$ ls
+file1.txt  file2.txt  file3.txt  README.md
+$ rm *.txt
+$ ls
+README.md
+```
+
+**Explanation:** The `*` wildcard matches all files ending in `.txt`. Use with caution as this can delete many files at once.
+
+**Delete a directory (empty):**
+```bash
+rmdir emptydir
+```
+
+**Explanation:** `rmdir` only removes empty directories. If the directory contains files, it will fail.
+
+**Delete a directory and its contents:**
+```bash
+rm -r mydir
+```
+
+**Example:** Before:
+```bash
+$ ls
+mydir/  README.md
+$ ls mydir/
+file1.txt  file2.txt
+```
+
+After running `rm -r mydir`:
+```bash
+$ ls
+README.md
+```
+
+**Explanation:**
+- The `-r` flag (recursive) deletes the directory and all its contents
+- Works for both files and subdirectories
+- **Very dangerous** - use carefully!
+
+**Delete directory with confirmation:**
+```bash
+rm -ri mydir
+```
+
+**Explanation:**
+- `-i` flag (interactive) prompts before each deletion
+- Combined with `-r` for recursive deletion with confirmation
+- Safer option when deleting directories
+
+**Force delete (no prompts):**
+```bash
+rm -f file.txt
+```
+
+**Explanation:**
+- `-f` flag (force) removes files without prompting, even if they're write-protected
+- Overrides `-i` if both are specified
+- Use with extreme caution
+
+**Common combinations:**
+```bash
+rm -rf directory/    # Recursive force delete (no prompts) - VERY DANGEROUS
+rm -ri directory/    # Recursive with prompts (safer)
+rm -r directory/     # Recursive delete (may prompt for write-protected files)
+```
+
+**Safety tips:**
+- Always double-check the path before running `rm`
+- Use `ls` first to verify what you're about to delete
+- Use `-i` flag for interactive mode when unsure
+- Consider using `rm -i` as an alias in your `.bashrc` for safer defaults
+- **Never run `rm -rf /` or `rm -rf ~`** - this will delete everything!
+
+## Searching for files with `find`
+
+**Use case:** Search for files and directories in a directory hierarchy based on various criteria (name, size, type, modification date, etc.). Powerful tool for locating files.
+
+**Command (find by name):**
+```bash
+find . -name "*.md"
+```
+
+**Example output:**
+```bash
+./README.md
+./practice/01-env/README.md
+./practice/02-cli/README.md
+./labs/lab1-cli.md
+```
+
+**Explanation:**
+- `.` - Start searching from current directory
+- `-name "*.md"` - Find files matching the pattern (all `.md` files)
+- Output shows the relative paths to all matching files
+
+**Other useful find examples:**
+```bash
+find . -type f -name "*.py"    # Find all Python files
+find . -type d -name "practice" # Find directories named "practice"
+find . -size +1M                # Find files larger than 1MB
+```
+
+## Finding commands
+
+When you type a command like `ls` or `python`, the shell needs to find the executable file. These commands help you locate where commands are stored on your system.
+
+### which
+
+**Use case:** Find the location of an executable command in your PATH. Shows the full path to the command that would be executed.
+
+**Command:**
+```bash
+which ls
+```
+
+**Example output:**
+```bash
+/usr/bin/ls
+```
+
+**Explanation:**
+- `which` searches for the command in directories listed in your `$PATH` environment variable (see **Environment Variables** below)
+- Returns the full path to the first executable found
+- Useful for verifying which version of a command will run
+- If the command is not found, `which` returns nothing (no output)
+
+### whereis
+
+**Use case:** Locate the binary, source, and manual page files for a command. More comprehensive than `which` as it searches standard directories, not just PATH.
+
+**Command:**
+```bash
+whereis ls
+```
+
+**Example output:**
+```bash
+ls: /usr/bin/ls /usr/share/man/man1/ls.1
+```
+
+**Explanation:**
+- `whereis` searches in standard system directories (not just PATH)
+- Shows binary location, source files (if available), and manual pages
+- More thorough than `which` but may find multiple versions
+
+**Find only the binary:**
+```bash
+whereis -b ls
+```
+
+**Example output:**
+```bash
+ls: /usr/bin/ls
+```
+
+**Key differences between `which` and `whereis`:**
+- **`which`**: Searches only in PATH, returns the first executable found, simpler output
+- **`whereis`**: Searches standard system directories, shows binaries/manuals/sources, more comprehensive
+
+**When to use each:**
+- Use `which` when you want to know which command will actually run (respects PATH order)
+- Use `whereis` when you want to find all related files (binary, manual, source) for a command
+
+### man (Manual Pages)
+
+**Use case:** Display the manual (help documentation) for commands. Manual pages are the built-in documentation system in Linux/Unix systems.
+
+**Command:**
+```bash
+man ls
+```
+
+**Example output (interactive view):**
+```
+LS(1)                    User Commands                   LS(1)
+
+NAME
+       ls - list directory contents
+
+SYNOPSIS
+       ls [OPTION]... [FILE]...
+
+DESCRIPTION
+       List  information  about  the FILEs (the current directory by
+       default).  Sort entries alphabetically if none of -cftuvSUX nor
+       --sort is specified.
+
+       Mandatory  arguments  to  long  options are mandatory for short
+       options too.
+
+       -a, --all
+              do not ignore entries starting with .
+...
+(END)
+```
+
+**Explanation:**
+- `man` opens the manual page for the specified command
+- Manual pages are comprehensive documentation with syntax, options, examples, and descriptions
+- Use arrow keys or Page Up/Down to navigate
+- Press `q` to quit
+- Press `/` to search within the manual (type search term, press Enter)
+- Press `h` for help with navigation
+
+**Search for a keyword in manual pages:**
+```bash
+man -k "list directory"
+```
+
+**Example output:**
+```bash
+ls (1)              - list directory contents
+dir (1)             - list directory contents
+vdir (1)            - list directory contents in long format
+```
+
+**Explanation:**
+- `-k` (or `--apropos`) searches manual page names and descriptions
+- Useful when you know what you want to do but not the command name
+- Returns all manual pages matching the keyword
+
+**View specific section of manual:**
+```bash
+man 1 ls
+```
+
+**Explanation:**
+- Manual pages are organized into sections (1 = user commands, 2 = system calls, 3 = library functions, etc.)
+- Some commands appear in multiple sections
+- `man 1 ls` explicitly requests section 1
+
+**Common manual sections:**
+- **Section 1**: User commands (most common)
+- **Section 2**: System calls
+- **Section 3**: Library functions
+- **Section 5**: File formats and conventions
+- **Section 8**: System administration commands
+
+**Quick reference (whatis):**
+```bash
+whatis ls
+```
+
+**Example output:**
+```bash
+ls (1)              - list directory contents
+```
+
+**Explanation:**
+- `whatis` shows a one-line description from the manual page
+- Quick way to see what a command does without opening the full manual
+- Faster than `man` when you just need a brief description
+
+**Find manual page location:**
+```bash
+man -w ls
+```
+
+**Example output:**
+```bash
+/usr/share/man/man1/ls.1.gz
+```
+
+**Explanation:**
+- `-w` (or `--path`) shows the file path of the manual page
+- Useful for finding where manual pages are stored
+- Similar to what `whereis -m` shows
+
+**Key concepts:**
+- Manual pages are the primary documentation source for Linux/Unix commands
+- Every standard command should have a manual page
+- Use `man command` to learn about any command's options and usage
+- Manual pages are more comprehensive than `--help` flags
+- Essential for understanding command-line tools
+
+## Inspect file content
+
+### cat (Concatenate)
+
+**Use case:** Display the entire contents of a file on the screen. Best for small files. The name comes from "concatenate" because it can combine multiple files.
+
+**Command:**
+```bash
+cat README.md
+```
+
+**Example output:**
+```bash
+# Getting Started
+
+This is a sample README file.
+It contains multiple lines of text.
+```
+
+**Explanation:** `cat` prints the entire file contents to the terminal. Useful for quick viewing of small files, but for large files, use `less` instead to avoid overwhelming the terminal.
+
+**Output multiple files:**
+
+**Let's assume you have a file `list1.txt` that contains:
+```bash
+apple
+banana
+```
+
+And `list2.txt` containing:
+```bash
+cherry
+date
+```
+
+Run this command:
+```bash
+cat list1.txt list2.txt
+```
+
+ And you should get:
+```bash
+apple
+banana
+cherry
+date
+```
+
+**Explanation:** `cat` can read multiple files in sequence and combine their contents. This is the "concatenate" functionality that gives `cat` its name. The files are combined in the order they appear in the command. When used with `>`, it redirects the combined output to a new file (see **Redirecting Output** section below).
+
+### less (is more)
+
+**Use case:** View file contents one screen at a time with the ability to scroll up and down. Ideal for reading large files without flooding the terminal. It is and advanced version of the `more` command, hence `less` is more.
+
+**Command:**
+```bash
+less README.md
+```
+
+**Example output (interactive view):**
+```
+# Getting Started
+
+This is a sample README file.
+It contains multiple lines of text.
+More content here...
+(END)
+```
+
+**Explanation:** 
+- `less` opens an interactive viewer
+- Use arrow keys or Page Up/Down to navigate
+- Press `q` to quit
+- Press `/` to search (type search term, press Enter)
+- Press `h` for help with all commands
+- Much better than `cat` for large files because you can scroll and search
+
+### grep (Global Regular Expression Print)
+
+**Use case:** Search for patterns (text strings) within files. Extremely useful for finding specific content in files or filtering command output.
+
+**Command:**
+```bash
+grep "pattern" filename
+```
+
+**Example:**
+```bash
+grep "README" *.md
+```
+
+**Example output:**
+```bash
+README.md:# Getting Started with README
+practice/01-env/README.md:## Getting Started
+practice/02-cli/README.md:# Exercises: Linux CLI
+```
+
+**Explanation:**
+- Searches for the word "README" in all `.md` files in the current directory
+- Output shows: `filename:line containing the match`
+- Each line shows which file contained the pattern and the matching line
+
+**Useful grep options:**
+```bash
+grep -i "pattern" file    # Case-insensitive search
+grep -r "pattern" .       # Recursive search in current directory and all subdirectories
+grep -n "pattern" file    # Show line numbers
+grep -v "pattern" file    # Show lines that DON'T match (invert)
+```
+
+You can combine multiple options as is typical for shell commands. For example, try the following:
+```bash
+grep -rin "linux" . 
+```
+
+### wc (Word Count)
+
+**Use case:** Count lines, words, and characters in files. Useful for getting statistics about file content, checking file sizes, or verifying data.
+
+**Count lines, words, and characters:**
+```bash
+wc README.md
+```
+
+**Example output:**
+```bash
+  42  156  1234 README.md
+```
+
+**Explanation:** The output shows three numbers followed by the filename:
+- First number (`42`): Number of lines
+- Second number (`156`): Number of words
+- Third number (`1234`): Number of characters (bytes)
+
+**Count only lines:**
+```bash
+wc -l README.md
+```
+
+**Example output:**
+```bash
+42 README.md
+```
+
+**Explanation:** The `-l` flag counts only the number of lines. Useful for quickly checking how many lines a file contains.
+
+**Count only words:**
+```bash
+wc -w README.md
+```
+
+**Example output:**
+```bash
+156 README.md
+```
+
+**Explanation:** The `-w` flag counts only the number of words (separated by whitespace).
+
+**Count only characters:**
+```bash
+wc -c README.md
+```
+
+**Example output:**
+```bash
+1234 README.md
+```
+
+**Explanation:** The `-c` flag counts only the number of characters (bytes) in the file.
+
+**Count multiple files:**
+```bash
+wc *.md
+```
+
+**Example output:**
+```bash
+  42  156  1234 README.md
+  28   89   567 practice/01-env/README.md
+  70  245  1801 practice/02-cli/README.md
+ 140  490  3602 total
+```
+
+**Explanation:** When given multiple files, `wc` shows statistics for each file and a total at the end. Useful for comparing file sizes or getting overall statistics.
+
+**Common use cases:**
+- Checking the size of log files
+- Verifying data file line counts
+- Getting word counts for text analysis
+- Comparing file sizes before processing
+
+## Sorting
+
+The `sort` command arranges lines of text in a file. By default, it sorts alphabetically (lexicographically), but it can also sort numerically.
+
+### Sorting text (fruit names)
+
+**Use case:** Sort a list of fruit names alphabetically.
+
+**Create a file `fruits.txt` containing:**
+```bash
+banana
+apple
+strawberry
+cherry
+BLUEBERRY
+```
+
+**Command:**
+```bash
+sort fruits.txt
+```
+
+**Example output:**
+```bash
+BLUEBERRY
+apple
+banana
+cherry
+strawberry
+```
+
+**Explanation:** 
+- `sort` arranges the lines alphabetically (string sorting)
+- "BLUEBERRY" comes first because uppercase letters (A-Z) come before lowercase letters (a-z) in ASCII/lexicographic sorting
+- "apple" comes before "banana" because 'a' comes before 'b' in the alphabet
+- This is **lexicographic sorting** - it compares characters from left to right based on ASCII values
+- Useful for organizing text data alphabetically
+
+**Case-insensitive sorting:**
+
+If you want to ignore case differences when sorting, use the `-f` flag:
+
+**Command:**
+```bash
+sort -f fruits.txt
+```
+
+**Example output:**
+```bash
+apple
+banana
+BLUEBERRY
+cherry
+strawberry
+```
+
+**Explanation:**
+- The `-f` flag (or `--ignore-case`) makes sorting case-insensitive
+- "apple" comes before "BLUEBERRY" because 'a' and 'A' are treated as the same
+- When case is ignored, the order is: apple, banana, BLUEBERRY, cherry, strawberry
+- Useful when you want to sort alphabetically regardless of capitalization
+
+**Save case-insensitive sorted output:**
+```bash
+sort -f fruits.txt > sorted_fruits.txt
+```
+
+### Sorting numbers (string vs numerical sorting)
+
+**Use case:** Understand the difference between string sorting and numerical sorting.
+
+**Create a file `numbers.txt` containing:**
+```bash
+1
+6
+2
+8
+10
+5
+```
+
+Run this command to sort the content of the file:
+```bash
+sort numbers.txt
+```
+
+**Example output:**
+```bash
+1
+10
+2
+5
+6
+8
+```
+
+**Explanation:**
+- By default, `sort` treats everything as text (strings)
+- It compares character by character from left to right
+- "10" comes before "2" because '1' < '2' when comparing the first character
+- This is **not** what we want for numbers!
+
+**Numerical sorting:**
+```bash
+sort -n numbers.txt
+```
+
+**Example output:**
+```bash
+1
+2
+5
+6
+8
+10
+```
+
+**Explanation:**
+- The `-n` flag tells `sort` to interpret values as numbers
+- Now it sorts by numerical value, not by character
+- "1" comes before "2", and "10" comes after "8" (as expected)
+
+**Key differences:**
+- **String sorting** (`sort`): Compares characters, so "10" < "2" (incorrect for numbers)
+- **Numerical sorting** (`sort -n`): Compares values, so 1 < 2 < 10 (correct for numbers)
+
+## Connecting Commands with Pipes (|)
+
+**What are pipes?**
+
+A pipe (`|`) connects the output of one command to the input of another command. This allows you to chain commands together to perform complex operations by combining simple tools.
+
+**Basic pipe example:**
+
+**Command:**
+```bash
+ls -l | grep "README"
+```
+
+**Example output:**
+```bash
+-rw-r--r-- 1 codespace codespace  1234 Jan 15 14:30 README.md
+```
+
+**Explanation:** 
+- `ls -l` lists all files with details
+- The `|` (pipe) sends that output to `grep`
+- `grep "README"` filters the output to show only lines containing "README"
+- Result: You see only files with "README" in their name
+
+**Count lines in a file:**
+
+**Command:**
+```bash
+cat README.md | wc -l
+```
+
+**Example output:**
+```bash
+42
+```
+
+**Explanation:**
+- `cat README.md` outputs the file contents
+- `|` pipes that output to `wc -l`
+- `wc -l` counts the number of lines
+- Result: You get the total line count of the file
+
+**Key concept:** The pipe takes the standard output (stdout) of the left command and feeds it as standard input (stdin) to the right command. This is a fundamental way to combine commands in Linux/Unix systems.
+
+## Redirecting output
+
+Output redirection allows you to send command output to a file instead of (or in addition to) displaying it on the screen. This is essential for saving results, creating logs, and processing data.
+
+### > (Overwrite redirect)
+
+**Use case:** Send command output to a file, overwriting the file if it exists. If the file doesn't exist, it will be created.
+
+**Basic redirect:**
+```bash
+echo "Hello World" > greeting.txt
+```
+
+**Example:** Check the file contents:
+```bash
+$ cat greeting.txt
+Hello World
+```
+
+**Explanation:** The `>` operator redirects the output of `echo` to `greeting.txt`. If the file already exists, its contents will be completely replaced.
+
+**Redirect command output:**
+```bash
+ls -l > filelist.txt
+```
+
+**Example output:**
+```bash
+$ ls -l > filelist.txt
+$ cat filelist.txt
+-rw-r--r-- 1 codespace codespace  1234 Jan 15 14:30 README.md
+drwxr-xr-x 3 codespace codespace  4096 Jan 15 10:15 practice
+drwxr-xr-x 2 codespace codespace  4096 Jan 15 09:00 labs
+```
+
+**Explanation:** Instead of displaying the `ls -l` output on screen, it's saved to `filelist.txt`. The file will contain the directory listing.
+
+**Combine multiple files:**
+
+**Command:**
+```bash
+cat list1.txt list2.txt > biglist.txt
+```
+
+**Example:** If `list1.txt` contains:
+```bash
+apple
+banana
+```
+
+And `list2.txt` contains:
+```bash
+cherry
+date
+```
+
+**After running the command, `biglist.txt` will contain:**
+```bash
+apple
+banana
+cherry
+date
+```
+
+**Explanation:** `cat` can read multiple files in sequence and combine their contents. When used with `>`, it redirects the combined output to a new file (see **Redirecting Output** section below). This is the "concatenate" functionality that gives `cat` its name. The files are combined in the order they appear in the command.
+
+**Redirect find output:**
+```bash
+find . -name "*.md" > markdown_files.txt
+```
+
+**Example output in file:**
+```bash
+$ cat markdown_files.txt
+./README.md
+./practice/01-env/README.md
+./practice/02-cli/README.md
+./labs/lab1-cli.md
+```
+
+**Explanation:** All markdown files found by the `find` command are saved to `markdown_files.txt` instead of being displayed.
+
+**Redirect with find -exec:**
+```bash
+find . -type f -exec ls -lh {} \; > filelist.txt
+```
+
+**Example output in file:**
+```bash
+$ cat filelist.txt
+-rw-r--r-- 1 codespace codespace 1.2K Jan 15 14:30 ./README.md
+-rw-r--r-- 1 codespace codespace 2.1K Jan 15 10:15 ./practice/01-env/README.md
+-rw-r--r-- 1 codespace codespace  856 Jan 15 09:00 ./script.sh
+```
+
+**Explanation:**
+- `find . -type f` finds all regular files in current directory and subdirectories
+- `-exec ls -lh {} \;` executes `ls -lh` on each file found (`{}` is replaced with each filename)
+- `> filelist.txt` redirects all the output to the file
+- This creates a detailed listing of all files with their sizes in human-readable format
+
+### >> (Append redirect)
+
+**Use case:** Append command output to the end of a file without overwriting existing content. If the file doesn't exist, it will be created.
+
+**Append to file:**
+```bash
+echo "First line" > log.txt
+echo "Second line" >> log.txt
+echo "Third line" >> log.txt
+```
+
+**Example:** Check the file contents:
+```bash
+$ cat log.txt
+First line
+Second line
+Third line
+```
+
+**Explanation:** The first `echo` uses `>` to create/overwrite the file. Subsequent `echo` commands use `>>` to append, preserving previous content.
+
+**Append command output:**
+```bash
+date >> log.txt
+```
+
+**Example output:**
+```bash
+$ cat log.txt
+First line
+Second line
+Third line
+Mon Jan 15 15:30:45 UTC 2024
+```
+
+**Explanation:** The current date and time are appended to the end of `log.txt` without removing existing content. Useful for logging.
+
+**Append find results:**
+```bash
+find . -name "*.py" >> all_files.txt
+find . -name "*.sh" >> all_files.txt
+```
+
+**Explanation:** Multiple search results can be combined into a single file by using `>>` for each command.
+
+### Key differences
+
+- **`>` (overwrite):** Replaces file contents completely. Use when you want a fresh file.
+- **`>>` (append):** Adds to the end of the file. Use for logging or accumulating results.
+
+**Important notes:**
+- If the target file doesn't exist, both `>` and `>>` will create it
+- Redirecting output doesn't display anything on screen (unless you also use `tee`)
+- Errors are not redirected by default (they go to stderr, not stdout)
+
+## Environment Variables
+
+**What are environment variables?**
+
+Environment variables are named values that store configuration information for your system and applications. They're accessible to all programs running in your shell session and help programs know where to find things or how to behave.
+
+**View a specific environment variable:**
+
+**Command:**
+```bash
+echo $HOME
+```
+
+**Example output:**
+```bash
+/home/codespace
+```
+
+**Explanation:** The `$` symbol tells the shell to expand the variable name. `$HOME` is a built-in environment variable that contains the path to your home directory.
+
+**Common built-in environment variables:**
+
+**Command:**
+```bash
+echo $HOME
+echo $USER
+echo $PWD
+echo $PATH
+```
+
+**Example output:**
+```bash
+/home/codespace
+vscode
+/workspaces/ds2002-course
+/usr/local/bin:/usr/bin:/bin
+```
+
+**Explanation:**
+- `$HOME` - Your home directory path
+- `$USER` - Your username
+- `$PWD` - Current working directory (same as `pwd` command output)
+- `$PATH` - List of directories where the system searches for executable programs (separated by `:`)
+
+**View all environment variables:**
+
+**Command:**
+```bash
+env
+```
+
+**Example output:**
+```bash
+HOME=/home/codespace
+USER=vscode
+PATH=/usr/local/bin:/usr/bin:/bin
+SHELL=/bin/bash
+...
+```
+
+**Explanation:** The `env` command displays all environment variables currently set in your session. This is useful for debugging or understanding your system configuration.
+
+**Set an environment variable (current session only):**
+
+**Command:**
+```bash
+export MY_VAR="Hello World"
+echo $MY_VAR
+```
+
+**Example output:**
+```bash
+Hello World
+```
+
+**Explanation:** 
+- `export` makes the variable available to child processes
+- Variable names are typically UPPERCASE (convention, not required)
+- The value is assigned with `=` (no spaces around `=`)
+- Use quotes if the value contains spaces
+- This variable only exists in the current terminal session
+- **Note**: When assigning a value to an environment variable you don't use the `$` (e.g. MY_VAR="Hello World"); but you have to use the `$` when you want to get its values (we call that referencing the variable), e.g. `echo $MY_VAR`.
+
+**Use environment variables in commands:**
+
+**Command:**
+```bash
+cd $HOME
+ls $HOME
+```
+
+**Explanation:** You can use environment variables anywhere in commands. The shell replaces `$VARIABLE_NAME` with its value before executing the command.
+
+**Why are environment variables useful?**
+- They provide a way to configure programs without hardcoding paths
+- They allow scripts to work across different systems
+- They store user preferences and system settings
+- They're essential for many development tools and applications
+
+## Advanced Commands and Concepts (Optional)
+
+If you like to dive a bit deeper, explore the following commands. **The content in the Advanced section is not part of any quizzes.**
+
+### More `touch`
+
+**Create file with specific timestamp:**
+```bash
+touch -t 202401151430 file.txt
+```
+
+**Explanation:** The `-t` flag allows you to set a specific timestamp. Format: `[[CC]YY]MMDDhhmm[.ss]` where:
+- `202401151430` = January 15, 2024 at 14:30
+
+**Common use cases:**
+- Creating placeholder files for scripts or programs
+- Creating log files before they're written to
+- Updating file timestamps for build systems
+- Creating empty files to test file operations
+
+### Advanced Sorting
+
+#### Reverse sorting
+
+**Use case:** Sort in descending order (reverse alphabetical or numerical order).
+
+**Command:**
+```bash
+sort -r fruits.txt
+```
+
+**Example output:**
+```bash
+strawberry
+cherry
+banana
+apple
+BLUEBERRY
+```
+
+**Explanation:**
+- The `-r` flag (or `--reverse`) sorts in descending order
+- For text: Z to A, then z to a
+- For numbers: highest to lowest (when used with `-n`)
+- Useful when you want the largest values or last items first
+
+**Reverse numerical sort:**
+```bash
+sort -rn numbers.txt
+```
+
+**Example output:**
+```bash
+10
+8
+6
+5
+2
+1
+```
+
+**Explanation:** `-rn` combines reverse (`-r`) and numerical (`-n`) sorting to get highest numbers first.
+
+#### Removing duplicates
+
+**Use case:** Sort and remove duplicate lines, keeping only unique entries.
+
+**Create a file `duplicates.txt` containing:**
+```bash
+apple
+banana
+apple
+cherry
+banana
+strawberry
+```
+
+**Command:**
+```bash
+sort -u duplicates.txt
+```
+
+**Example output:**
+```bash
+apple
+banana
+cherry
+strawberry
+```
+
+**Explanation:**
+- The `-u` flag (or `--unique`) removes duplicate lines after sorting
+- Only one instance of each unique line is kept
+- Useful for cleaning up data with duplicates
+
+**Alternative approach:**
+```bash
+sort duplicates.txt | uniq
+```
+
+**Explanation:** `uniq` also removes duplicates, but requires sorted input (hence the pipe from `sort`).
+
+#### Sorting by specific columns
+
+**Use case:** Sort structured data (like CSV or tab-separated files) by a specific column.
+
+**Create a file `students.txt` containing (tab-separated):**
+```bash
+Alice	25	Math
+Bob	22	Science
+Charlie	25	History
+Diana	23	Math
+```
+
+**Sort by the first column (name):**
+```bash
+sort students.txt
+```
+
+**Sort by the second column (age) numerically:**
+```bash
+sort -k2 -n students.txt
+```
+
+**Example output:**
+```bash
+Bob	22	Science
+Diana	23	Math
+Alice	25	Math
+Charlie	25	History
+```
+
+**Explanation:**
+- `-k2` specifies sorting by the second field (column)
+- `-n` makes it numerical sorting
+- By default, fields are separated by whitespace (spaces or tabs)
+- Useful for sorting tabular data by any column
+
+**Sort by the third column (subject):**
+```bash
+sort -k3 students.txt
+```
+
+**Example output:**
+```bash
+Charlie	25	History
+Alice	25	Math
+Diana	23	Math
+Bob	22	Science
+```
+
+**Specify a delimiter:**
+
+**Create a CSV file `data.csv`:**
+```bash
+Name,Age,City
+Alice,25,New York
+Bob,22,Los Angeles
+Charlie,25,Chicago
+```
+
+**Sort by the second column (Age) in a CSV:**
+```bash
+sort -t',' -k2 -n data.csv
+```
+
+**Example output:**
+```bash
+Name,Age,City
+Bob,22,Los Angeles
+Alice,25,New York
+Charlie,25,Chicago
+```
+
+**Explanation:**
+- `-t','` specifies comma as the field delimiter
+- `-k2` sorts by the second field
+- `-n` for numerical sorting
+- Essential for working with CSV files or other delimited data
+
+#### Sorting large files: Handling memory limitations
+
+**Use case:** Sort very large files that might exceed available memory.
+
+**Command:**
+```bash
+sort -T /tmp largefile.txt > sorted_largefile.txt
+```
+
+**Explanation:**
+- The `-T` option specifies a temporary directory for sorting
+- When memory is limited, `sort` uses disk space in the temp directory
+- `/tmp` is a common temporary directory (you can use any writable directory)
+- This allows sorting files larger than available RAM
+
+**Specify buffer size:**
+```bash
+sort -S 1G -T /tmp hugefile.txt > sorted_hugefile.txt
+```
+
+**Explanation:**
+- `-S 1G` sets the buffer size to 1 gigabyte
+- Adjust based on available memory
+- Useful for optimizing performance on large files
+
+#### Combining multiple sort options
+
+**Use case:** Combine multiple sorting options for complex sorting needs.
+
+**Sort numerically, in reverse, and remove duplicates:**
+```bash
+sort -nru numbers.txt
+```
+
+**Sort case-insensitively and remove duplicates:**
+```bash
+sort -fu fruits.txt
+```
+
+**Sort by column, numerically, in reverse:**
+```bash
+sort -t',' -k2 -rn data.csv
+```
+
+**Explanation:** You can combine multiple flags:
+- `-n` (numerical) + `-r` (reverse) + `-u` (unique)
+- `-f` (case-insensitive) + `-u` (unique)
+- `-t` (delimiter) + `-k` (column) + `-n` (numerical) + `-r` (reverse)
+
+**Key advanced sorting options:**
+- `-r` / `--reverse` - Sort in reverse order
+- `-u` / `--unique` - Remove duplicate lines
+- `-k FIELD` - Sort by specific field/column
+- `-t DELIMITER` - Specify field delimiter
+- `-T DIR` - Use directory for temporary files
+- `-S SIZE` - Set buffer size for sorting
+- Combine flags as needed for your specific use case
+
+### Redirecting Input and Output (Advanced)
+
+**File Descriptors**
+
+In Linux/Unix, every process has three standard file descriptors:
+- **0 (stdin)** - Standard input (where commands read data from, typically the keyboard)
+- **1 (stdout)** - Standard output (where commands write normal output, typically the terminal)
+- **2 (stderr)** - Standard error (where commands write error messages, typically the terminal)
+
+Understanding these file descriptors allows you to control where input comes from and where output goes.
+
+**Redirecting input with `<`**
+
+Create a text file `unsorted.txt` that contains:
+```bash
+banana
+apple
+strawberry
+cherry
+BLUEBERRY
+```
+
+Execute this command:
+```bash
+sort < unsorted.txt > sorted.txt
+```
+
+Observe the content in the output file `sorted.txt`. It should contain:
+```bash
+apple
+banana
+cherry
+strawberry
+```
+
+**Explanation:**
+- `< unsorted.txt` redirects the file contents to stdin (input) of the `sort` command
+- `> sorted.txt` redirects stdout (output) to the file
+- The command reads from the file instead of waiting for keyboard input
+
+This works universally for any command. Try this: 
+```bash
+grep "berry" < logfile.txt > errors.txt
+```
+
+**Explanation:**
+- `< logfile.txt` - Input comes from `logfile.txt`
+- `grep "error"` - Searches for lines containing "error"
+- `> errors.txt` - Output goes to `errors.txt`
+- This filters the log file and saves matching lines to a new file
+
+**Redirecting stderr with `2>`:**
+
+**Command:**
+```bash
+find /nonexistent 2> errors.log
+```
+
+**Example output in `errors.log`:**
+```bash
+find: '/nonexistent': No such file or directory
+```
+
+**Explanation:**
+- `2>` redirects stderr (file descriptor 2) to the file
+- Normal output (stdout) still goes to the terminal
+- Error messages are captured in the file instead of displaying on screen
+
+**Redirecting both stdout and stderr:**
+
+**Method 1: Redirect both separately**
+```bash
+command > output.txt 2> errors.txt
+```
+
+**Explanation:** 
+- `> output.txt` redirects stdout to `output.txt`
+- `2> errors.txt` redirects stderr to `errors.txt`
+- Normal output and errors go to different files
+
+**Method 2: Redirect stderr to stdout with `2>&1`**
+```bash
+command > output.txt 2>&1
+```
+
+**Example:**
+```bash
+find . -name "*.txt" > results.txt 2>&1
+```
+
+**Explanation:**
+- `> results.txt` redirects stdout to `results.txt`
+- `2>&1` redirects stderr (2) to wherever stdout (1) is going
+- Both normal output and errors go to the same file
+- `&1` means "the same place as file descriptor 1"
+
+**Redirect everything to /dev/null:**
+
+**Command:**
+```bash
+command > /dev/null 2>&1
+```
+
+**Explanation:**
+- `/dev/null` is a special device that discards all data
+- `> /dev/null` discards stdout
+- `2>&1` sends stderr to the same place (also discarded)
+- Useful when you want to run a command but don't care about its output
+
+**Combining input and output redirection:**
+
+**Command:**
+```bash
+python script.py < input.txt > output.txt 2> errors.txt
+```
+
+**Explanation:**
+- `< input.txt` - Script reads input from `input.txt`
+- `> output.txt` - Script writes output to `output.txt`
+- `2> errors.txt` - Script writes errors to `errors.txt`
+- This is a complete I/O redirection setup
+
+**Key concepts:**
+- File descriptors: `0` (stdin), `1` (stdout), `2` (stderr)
+- `<` redirects input (stdin)
+- `>` redirects output (stdout)
+- `2>` redirects errors (stderr)
+- `2>&1` redirects stderr to wherever stdout is going
+- `/dev/null` discards output
+
+### User and Group Information
+
+In codespace you're running your terminal session in an isolated single user environment. The prompt shows `@ksiller` which indicates the **GitHub username** of the codespace owner. But is that my user account on the system? Let's find out with the `whoami` command.
+
+**Command:**
+```bash
+whoami
+```
+
+**Example output:**
+```bash
+vscode
+```
+
+**Explanation:** The `whoami` command displays the username of the current user. In Codespaces, the system assigns a user account `vscode` (or similar) regardless of your GitHub username. The `@ksiller` in the prompt is just a display name, not the actual system user.
+
+**What about the group?** You can check with the `groups` command.
+
+**Command:**
+```bash
+groups
+```
+
+**Example output:**
+```bash
+vscode
+```
+
+**Explanation:** Shows all groups that the current user belongs to. In this case, the user `vscode` belongs to the group `vscode`. Groups are used for managing file permissions and access control.
+
+**Who else is in my group?**
+
+**Command:**
+```bash
+getent group vscode   # replace vscode with your group name
+```
+
+**Example output:**
+```bash
+vscode:x:1000:vscode
+```
+
+**Explanation:**
+- `vscode` - Group name
+- `x` - Password field (usually `x` means password is stored elsewhere)
+- `1000` - Group ID (GID)
+- `vscode` - List of users in this group (comma-separated if multiple)
+
+The `getent` command queries system databases (like `/etc/group`) to get information about groups, users, hosts, etc.
+
+### Process Information
+
+**View running processes:**
+
+**Command:**
+```bash
+ps aux
+```
+
+**Example output:**
+```bash
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+vscode       1  0.0  0.1  12345  6789 ?        Ss   14:30   0:00 /bin/bash
+vscode      42  0.1  2.3  45678 12345 ?        S    14:31   0:05 python script.py
+```
+
+**Explanation:**
+- `USER` - User running the process
+- `PID` - Process ID (unique identifier)
+- `%CPU` - CPU usage percentage
+- `%MEM` - Memory usage percentage
+- `COMMAND` - Command that started the process
+
+**Find a specific process:**
+
+**Command:**
+```bash
+ps aux | grep python
+```
+
+**Example output:**
+```bash
+vscode      42  0.1  2.3  45678 12345 ?        S    14:31   0:05 python script.py
+```
+
+**Explanation:** 
+- `ps aux` lists all running processes
+- The `|` (pipe) sends that output to `grep`
+- `grep python` filters to show only processes containing "python"
+- Result: You see only Python-related processes, making it easier to find specific programs running on your system
+
+### System Resources
+
+**Monitor system resources interactively:**
+
+**Command:**
+```bash
+htop
+```
+
+**Explanation:** An interactive process viewer (if installed). Press `q` to quit. Shows CPU, memory usage, and running processes in real-time. More user-friendly than `top`.
+
+**Check disk usage:**
+
+**Command:**
+```bash
+df -h
+```
+
+**Example output:**
+```bash
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        20G  5.2G   14G  28% /
+```
+
+**Explanation:**
+- `-h` flag shows sizes in human-readable format (GB, MB)
+- Shows filesystem size, used space, available space, and mount point
+- Useful for checking if you're running out of disk space
+
+**Check disk usage of current directory:**
+
+**Command:**
+```bash
+du -sh .
+```
+
+**Example output:**
+```bash
+125M    .
+```
+
+**Explanation:**
+- `-s` - Summary (total size only)
+- `-h` - Human-readable format
+- `.` - Current directory
+- Shows total size of all files in the current directory and subdirectories
+
+### Environment Variables
+
+**View all environment variables:**
+
+**Command:**
+```bash
+env
+```
+
+**Or view a specific variable:**
+
+**Command:**
+```bash
+echo $HOME
+echo $PATH
+```
+
+**Explanation:** Environment variables store system and user configuration. `$HOME` contains your home directory path, `$PATH` contains directories where the system searches for executables.
+
+**Set an environment variable for current session:**
+
+**Command:**
+```bash
+export MY_VAR="Hello World"
+echo $MY_VAR
+```
+
+**Explanation:** `export` makes the variable available to child processes. This variable will only exist in the current terminal session.
+
+### Command History
+
+**View command history:**
+
+**Command:**
+```bash
+history
+```
+
+**Search history:**
+
+**Command:**
+```bash
+history | grep "cd"
+```
+
+**Explanation:** Shows previously executed commands. Useful for finding commands you ran earlier. You can also use arrow keys (↑/↓) to navigate through history interactively.
+
+### File Permissions and Ownership
+
+**Change file permissions:**
+
+**Command:**
+```bash
+chmod 755 script.sh
+```
+
+**Explanation:**
+- `755` means: owner can read/write/execute (7), group can read/execute (5), others can read/execute (5)
+- `7` = 4 (read) + 2 (write) + 1 (execute)
+- `5` = 4 (read) + 1 (execute)
+
+**Change file ownership:**
+
+**Command:**
+```bash
+chown user:group filename
+```
+
+**Explanation:** Changes the owner and group of a file. Usually requires `sudo` (superuser privileges) unless you own the file.
+
+**Create directory with specific permissions:**
+
+**Command:**
+```bash
+mkdir -m 755 mydir
+```
+
+**Explanation:**
+- The `-m` flag sets the permissions mode when creating a directory
+- `755` means: owner can read/write/execute (7), group can read/execute (5), others can read/execute (5)
+- `7` = 4 (read) + 2 (write) + 1 (execute)
+- `5` = 4 (read) + 1 (execute)
+- Useful when you need specific permissions from the start, rather than changing them later with `chmod`
+
+These advanced commands help you understand and manage your system at a deeper level!

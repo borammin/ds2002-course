@@ -1,5 +1,0 @@
-https://github.com/new?owner=
-&template_name=secure-repository-supply-chain
-&template_owner=skills
-&name=skills-secure-repository-supply-chain
-&visibility=public

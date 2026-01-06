@@ -10,10 +10,16 @@
 	"dockerFile": "../Dockerfile",
 
 	// Set *default* container specific settings.json values on container create.
-	"customizations":{
+	"customizations": {
 		"vscode": {
-			"settings": {"terminal.integrated.shell.linux": null},
-			"extensions": []
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-toolsai.jupyter",
+				"eamodio.gitlens",
+				"redhat.vscode-yaml",
+				"ms-azuretools.vscode-docker"
+			]
 		}
 	},
 
@@ -28,13 +34,20 @@
 	"forwardPorts": [8000],
 
 	"containerEnv": {
-    	"MY_CONTAINER_VAR": "some-value-here",
-    	"TWILIO_AUTH_TOKEN": "${localEnv:TWILIO_AUTH_TOKEN}",
-		"GITHUB_TOKEN": "$(localEnv:GITHUB_TOKEN)""
+    	"MY_CONTAINER_VAR": "some-value-here"
+		// Note: For Codespaces, use repository secrets for sensitive tokens
+		// "TWILIO_AUTH_TOKEN": "${localEnv:TWILIO_AUTH_TOKEN}",
+		// "GITHUB_TOKEN": "$(localEnv:GITHUB_TOKEN)"
 	},
-
-	// Uncomment the next line to run commands after the container is created - for example installing curl.
-	"postCreateCommand": "pip install -r /root/requirements.txt"
+	"features": {
+		"ghcr.io/devcontainers/features/python": {
+			"installJupyterlab": true
+		},
+		"ghcr.io/devcontainers-extra/features/mongodb-atlas-cli-homebrew:1": {}
+	}
+	// Note: Packages from requirements.txt are already installed in the Dockerfile
+	// If you need to install additional packages or run setup commands, uncomment below:
+	// "postCreateCommand": "echo 'Container ready!' && python --version"
 
 	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker.
 

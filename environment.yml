@@ -1,0 +1,35 @@
+name: ds2002
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - htop
+  - jq
+  - awscli
+  - curl
+  - wget
+  - git
+  - zip
+  - unzip
+  - tar
+  - redis-server
+  - redis-py
+  - mongodb
+  - pip
+  - pip:
+    - requests
+    - redis
+    - boto3
+    - gsutil
+    - uvicorn
+    - fastapi
+    - pydantic
+    - typing
+    - pipenv
+    - prettyprint
+    - dnspython
+    - pymongo
+    - chalice
+    - mysqlclient
+
