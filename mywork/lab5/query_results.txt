@@ -1,0 +1,8 @@
+customer_name	flavor	scoops	price
+Alice Key	Vanilla	2	5.50
+Bob Smith	Chocolate	3	7.25
+David Lee	Mint Chip	2	5.75
+Emma Brown	Cookie Dough	3	7.50
+Grace Kim	Rocky Road	2	6.00
+Isabel Garcia	Strawberry	3	7.00
+Jack Wilson	Mango Sorbet	2	5.50

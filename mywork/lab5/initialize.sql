@@ -41,4 +41,8 @@ INSERT INTO orders VALUES
 (107, 7, 'Rocky Road', 2, 6.00, NOW()),
 (108, 8, 'Chocolate', 1, 3.25, NOW()),
 (109, 9, 'Strawberry', 3, 7.00, NOW()),
+<<<<<<< HEAD
 (110, 10, 'Mango Sorbet', 2, 5.50, NOW());
+=======
+(110, 10, 'Mango Sorbet', 2, 5.50, NOW());
+>>>>>>> a92ee8c (Complete Lab 05: SQL for Data Engineering)
