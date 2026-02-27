@@ -22,7 +22,6 @@ def main():
     for author in authors.find({}, {"name": 1, "nationality": 1, "birthday": 1, "_id": 0}):
         print(f"{author['name']} ({author['nationality']}) - Birthday: {author.get('birthday', 'N/A')}")
 
-    # Close connection
     client.close()
 
 if __name__ == "__main__":
