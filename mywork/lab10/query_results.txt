@@ -1,0 +1,4 @@
+customer_name	flavor	scoops	price
+Liam Turner	Pistachio	2	5.75
+Mia Davis	Chocolate Chip	3	7.25
+Liam Turner	Mint Chip	2	5.75
